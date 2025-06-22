@@ -1,8 +1,10 @@
+import { IHttpRequest } from "../../contracts/IHttpRequest";
+
 export class HelloController {
-    async handle() {
+    async handle(request: IHttpRequest) {
         return {
             statusCode: 200,
-            body: "Hello controller",
+            body: JSON.stringify({ request }),
         };
     }
 }
