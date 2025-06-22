@@ -1,7 +1,8 @@
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from "aws-lambda";
 import { lambdaBodyParser } from "../utils/lambdaBodyParser";
+import { IController } from "../../contracts/IController";
 
-export function lambdaHttpAdapter(controller: any) {
+export function lambdaHttpAdapter(controller: IController<unknown>) {
     return async (
         event: APIGatewayProxyEventV2
     ): Promise<APIGatewayProxyResultV2> => {
