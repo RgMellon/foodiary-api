@@ -1,14 +1,15 @@
-import { IController } from "../../contracts/IController";
+import { Controller } from "../../contracts/Controller";
+import { HelloBody, helloSchema } from "../schemas/helloSchema";
 
-export class HelloController implements IController<unknown> {
+export class HelloController extends Controller<unknown> {
     async handle(
-        request: IController.HttpRequest
-    ): Promise<IController.HttpResponse<unknown>> {
+        request: Controller.HttpRequest<HelloBody>
+    ): Promise<Controller.HttpResponse<unknown>> {
+        this.schema = helloSchema;
+
         return {
             statusCode: 200,
-            body: {
-                request,
-            },
+            body: request.body,
         };
     }
 }
