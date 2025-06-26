@@ -1,0 +1,7 @@
+export enum ErrorCode {
+    VALIDATION = "VALIDATION",
+
+    //HTTP
+    BAD_REQUEST = "BAD_REQUEST",
+    INTERNAL_ERROR = "INTERNAL_ERROR",
+}
