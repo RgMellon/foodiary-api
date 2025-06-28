@@ -12,7 +12,9 @@ export class HelloController extends Controller<unknown> {
     async handle(
         request: Controller.HttpRequest<HelloBody>
     ): Promise<Controller.HttpResponse<unknown>> {
-        const response = this.useCase.execute({ email: request.body.email });
+        const response = await this.useCase.execute({
+            email: request.body.email,
+        });
 
         return {
             statusCode: 200,
