@@ -32,7 +32,7 @@ export namespace Controller {
         TParams = Record<string, unknown>,
         TQueryParams = Record<string, unknown>
     > = {
-        body?: TBody;
+        body: TBody;
         params: TParams;
         queryParams: TQueryParams;
     };
