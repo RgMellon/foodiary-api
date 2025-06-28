@@ -1,6 +1,18 @@
-type Constructor<T = any> = new (...args: any[]) => T;
+import { Constructor } from "@kernel/shared/types/Constructor";
 
 export class Registry {
+    private static instance: Registry | undefined;
+
+    private constructor() {}
+
+    static getInstance() {
+        if (!this.instance) {
+            this.instance = new Registry();
+        }
+
+        return this.instance;
+    }
+
     // aqui eu salvo a instancia
     private providers = new Map<string, Registry.Provider>();
 
