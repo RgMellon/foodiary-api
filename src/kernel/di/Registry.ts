@@ -1,0 +1,42 @@
+type Constructor<T = any> = new (...args: any[]) => T;
+
+export class Registry {
+    // aqui eu salvo a instancia
+    private providers = new Map<string, Registry.Provider>();
+
+    register(impl: Constructor) {
+        const token = impl.name;
+
+        if (this.providers.get(token)) {
+            throw new Error(`${impl.name} already registered`);
+        }
+
+        const deps: Constructor<any>[] =
+            Reflect.getMetadata("design:paramtypes", impl) ?? [];
+
+        this.providers.set(token, {
+            impl,
+            deps,
+        });
+    }
+
+    resolve<TImpl extends Constructor>(impl: TImpl): InstanceType<TImpl> {
+        const provider = this.providers.get(impl.name);
+
+        if (!provider)
+            throw new Error(`${impl.name} doesn't exist on provider`);
+
+        const dependencies = provider.deps.map((dep) => this.resolve(dep));
+
+        const instance = new provider.impl(...dependencies);
+
+        return instance;
+    }
+}
+
+namespace Registry {
+    export type Provider = {
+        impl: Constructor;
+        deps: Constructor[];
+    };
+}
