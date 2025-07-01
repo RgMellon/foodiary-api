@@ -5,6 +5,7 @@ export abstract class Controller<TBody = undefined> {
         params: Controller.HttpRequest
     ): Promise<Controller.HttpResponse<TBody>>;
 
+    // Funciona como se fosse um proxy
     public execute(
         request: Controller.HttpRequest
     ): Promise<Controller.HttpResponse<TBody>> {
