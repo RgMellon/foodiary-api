@@ -1,9 +1,16 @@
 import { Injectable } from "@kernel/decorators/Injectable";
+import { AuthGateway } from "src/infra/gateways/AuthGateway";
 
 @Injectable()
 export class SignUpUseCase {
+    constructor(private readonly authGateway: AuthGateway) {}
+
     async execute(input: SignUpUseCase.Input): Promise<SignUpUseCase.Output> {
-        // account.email
+        const { externalId } = await this.authGateway.signUp({
+            email: input.email,
+            password: input.password,
+        });
+
         return {
             accessToken: "sdd",
             refreshToken: "sdadsa",

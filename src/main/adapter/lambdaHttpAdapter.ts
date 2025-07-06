@@ -35,6 +35,7 @@ export function lambdaHttpAdapter(controller: Controller<unknown>) {
                 return lambdaErrorResponse(error);
             }
 
+            console.log(error);
             return lambdaErrorResponse({
                 code: "INTERNAL",
                 message: "Internal server error",
