@@ -5,15 +5,23 @@ import { AuthGateway } from "src/infra/gateways/AuthGateway";
 export class SignUpUseCase {
     constructor(private readonly authGateway: AuthGateway) {}
 
-    async execute(input: SignUpUseCase.Input): Promise<SignUpUseCase.Output> {
-        const { externalId } = await this.authGateway.signUp({
-            email: input.email,
-            password: input.password,
+    async execute({
+        email,
+        password,
+    }: SignUpUseCase.Input): Promise<SignUpUseCase.Output> {
+        await this.authGateway.signUp({
+            email: email,
+            password: password,
+        });
+
+        const { accessToken, refreshToken } = await this.authGateway.signIn({
+            email,
+            password,
         });
 
         return {
-            accessToken: "sdd",
-            refreshToken: "sdadsa",
+            accessToken,
+            refreshToken,
         };
     }
 }
