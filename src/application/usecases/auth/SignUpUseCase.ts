@@ -1,3 +1,4 @@
+import { Account } from "@application/entities/Account";
 import { Injectable } from "@kernel/decorators/Injectable";
 import { AuthGateway } from "src/infra/gateways/AuthGateway";
 
@@ -9,9 +10,14 @@ export class SignUpUseCase {
         email,
         password,
     }: SignUpUseCase.Input): Promise<SignUpUseCase.Output> {
-        await this.authGateway.signUp({
+        const { externalId } = await this.authGateway.signUp({
             email: email,
             password: password,
+        });
+
+        const account = new Account({
+            email,
+            externalId,
         });
 
         const { accessToken, refreshToken } = await this.authGateway.signIn({

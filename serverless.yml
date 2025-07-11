@@ -8,6 +8,8 @@ provider:
     memorySize: 128
     stage: ${opt:stage, 'dev'}
     environment: ${file(./sls/config/env.yml)}
+    iam:
+        role: ${file(./sls/config/role.yml)}
 
 package:
     individually: true
