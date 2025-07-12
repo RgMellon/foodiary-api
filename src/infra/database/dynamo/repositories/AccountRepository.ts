@@ -1,22 +1,53 @@
 import { Account } from "@application/entities/Account";
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { Injectable } from "@kernel/decorators/Injectable";
 import { DynamoClient } from "src/infra/client/DynamoClient";
 import { AppConfig } from "src/shared/config/AppConfig";
+import { AccountItem } from "../items/AccountItem";
 
 @Injectable()
 export class AccountRepository {
     constructor(private readonly config: AppConfig) {}
 
+    async findByEmail(email: string): Promise<Account | null> {
+        console.log({
+            ":GSI1PK": AccountItem.getGSI1PK(email),
+            ":GSI1SK": AccountItem.getGSI1SK(email),
+        });
+
+        const comand = new QueryCommand({
+            IndexName: "GSI1",
+            TableName: this.config.database.dynamodb.mainTable,
+            KeyConditionExpression: "#GSI1PK = :GSI1PK AND #GSI1SK = :GSI1SK",
+            Limit: 1,
+            ExpressionAttributeNames: {
+                "#GSI1PK": "GSI1PK",
+                "#GSI1SK": "GSI1SK",
+            },
+
+            ExpressionAttributeValues: {
+                ":GSI1PK": AccountItem.getGSI1PK(email),
+                ":GSI1SK": AccountItem.getGSI1SK(email),
+            },
+        });
+
+        const { Items = [] } = await DynamoClient.send(comand);
+        console.log({ comand });
+        const account = Items[0] as AccountItem.ItemType | undefined;
+        console.log({ account });
+        if (!account) {
+            return null;
+        }
+
+        return AccountItem.toEntity(account);
+    }
+
     async create(account: Account): Promise<void> {
+        const accountItem = AccountItem.fromEntity(account);
+
         const command = new PutCommand({
             TableName: this.config.database.dynamodb.mainTable,
-            Item: {
-                type: "Account",
-                id: account.id,
-                externalId: account.externalId,
-                PK: `Account#${account.id}`,
-            },
+            Item: accountItem.toItem(),
         });
 
         await DynamoClient.send(command);

@@ -7,16 +7,21 @@ export class Account {
 
     externalId: string;
 
+    readonly createdAt: Date;
+
     constructor(attrs: Account.Attributes) {
         this.email = attrs.email;
         this.externalId = attrs.externalId;
-        this.id = KSUID.randomSync().string;
+        this.id = attrs.id ?? KSUID.randomSync().string;
+        this.createdAt = attrs.createdAt ?? new Date();
     }
 }
 
-export  namespace Account {
+export namespace Account {
     export type Attributes = {
         email: string;
         externalId: string;
+        id?: string;
+        createdAt?: Date;
     };
 }
