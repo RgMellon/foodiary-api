@@ -1,3 +1,4 @@
+import { ApplicationError } from "@application/errors/application/ApplicationError";
 import { HttpError } from "@application/errors/http/HttpError";
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from "aws-lambda";
 import { ZodError } from "zod";
@@ -33,6 +34,13 @@ export function lambdaHttpAdapter(controller: Controller<unknown>) {
 
             if (error instanceof HttpError) {
                 return lambdaErrorResponse(error);
+            }
+
+            if (error instanceof ApplicationError) {
+                return lambdaErrorResponse({
+                    ...error,
+                    statusCode: 400,
+                });
             }
 
             console.log(error);
