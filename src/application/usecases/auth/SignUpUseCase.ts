@@ -25,15 +25,17 @@ export class SignUpUseCase {
             throw new EmailAlreadyUsed();
         }
 
+        const account = new Account({
+            email,
+        });
+
         const { externalId } = await this.authGateway.signUp({
             email: email,
             password: password,
+            internalId: account.id,
         });
 
-        const account = new Account({
-            email,
-            externalId,
-        });
+        account.externalId = externalId;
 
         await this.accountRespository.create(account);
 
@@ -53,6 +55,7 @@ export namespace SignUpUseCase {
     export type Input = {
         email: string;
         password: string;
+        internalId: string;
     };
 
     export type Output = {

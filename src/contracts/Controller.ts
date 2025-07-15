@@ -36,6 +36,7 @@ export namespace Controller {
         body: TBody;
         params: TParams;
         queryParams: TQueryParams;
+        accountId: string | null;
     };
 
     export type HttpResponse<TBody = undefined> = {

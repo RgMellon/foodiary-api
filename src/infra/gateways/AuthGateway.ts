@@ -43,11 +43,18 @@ export class AuthGateway {
     async signUp({
         email,
         password,
+        internalId,
     }: AuthGateway.SignupParams): Promise<AuthGateway.SignUpResult> {
         const command = new SignUpCommand({
             ClientId: this.appConfig.auth.cognito.clientId,
             Username: email,
             Password: password,
+            UserAttributes: [
+                {
+                    Name: "custom:internalId",
+                    Value: internalId,
+                },
+            ],
             SecretHash: this.generateSecretHash(email),
         });
 
@@ -75,6 +82,7 @@ namespace AuthGateway {
     export type SignupParams = {
         email: string;
         password: string;
+        internalId: string;
     };
 
     export type SignUpResult = {
