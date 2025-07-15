@@ -21,3 +21,11 @@ presignUpTrigger:
             trigger: PreSignUp
             existing: true
             forceDeploy: true
+
+preTokenGenerationTrigger:
+    handler: src/main/functions/auth/preTokenGenerationTrigger.handler
+    # Configuracao feita manualmente para suportar o eventV2  no UserPool.yml
+    # Fazer a config la dentro do console, pois nao tem acesso da v2 do trigger usando o serverless
+
+
+
