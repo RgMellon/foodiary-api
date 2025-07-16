@@ -19,8 +19,6 @@ export class SignUpUseCase {
             email
         );
 
-        console.log({ emailAlreadyUsed });
-
         if (emailAlreadyUsed) {
             throw new EmailAlreadyUsed();
         }
@@ -55,7 +53,6 @@ export namespace SignUpUseCase {
     export type Input = {
         email: string;
         password: string;
-        internalId: string;
     };
 
     export type Output = {

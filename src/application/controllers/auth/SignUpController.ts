@@ -9,13 +9,16 @@ import { Controller } from "src/contracts/Controller";
 
 @Injectable()
 @Schema(signupSchema)
-export class SignUpController extends Controller<SignUpController.Response> {
+export class SignUpController extends Controller<
+    "public",
+    SignUpController.Response
+> {
     constructor(private readonly signUpUseCase: SignUpUseCase) {
         super();
     }
 
     async handle(
-        request: Controller.HttpRequest<SignUpBody>
+        request: Controller.HttpRequest<"public", SignUpBody>
     ): Promise<Controller.HttpResponse<SignUpController.Response>> {
         const { account } = request.body;
         const { accessToken, refreshToken } = await this.signUpUseCase.execute(

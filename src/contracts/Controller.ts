@@ -1,13 +1,15 @@
 import { getSchema } from "../kernel/decorators/Schema";
 
-export abstract class Controller<TBody = undefined> {
+type TRouteType = "public" | "private";
+
+export abstract class Controller<TType extends TRouteType, TBody = undefined> {
     abstract handle(
-        params: Controller.HttpRequest
+        params: Controller.HttpRequest<TType>
     ): Promise<Controller.HttpResponse<TBody>>;
 
     // Funciona como se fosse um proxy
     public execute(
-        request: Controller.HttpRequest
+        request: Controller.HttpRequest<TType>
     ): Promise<Controller.HttpResponse<TBody>> {
         const body = this.validateBody(request.body);
 
@@ -17,7 +19,7 @@ export abstract class Controller<TBody = undefined> {
         });
     }
 
-    private validateBody(body: Controller.HttpRequest["body"]) {
+    private validateBody(body: Controller.HttpRequest<TRouteType>["body"]) {
         const schema = getSchema(this);
         if (!schema) {
             return body;
@@ -28,7 +30,7 @@ export abstract class Controller<TBody = undefined> {
 }
 
 export namespace Controller {
-    export type HttpRequest<
+    type BaseType<
         TBody = Record<string, unknown>,
         TParams = Record<string, unknown>,
         TQueryParams = Record<string, unknown>
@@ -36,8 +38,32 @@ export namespace Controller {
         body: TBody;
         params: TParams;
         queryParams: TQueryParams;
-        accountId: string | null;
     };
+
+    type PublicRequest<
+        TBody = Record<string, unknown>,
+        TParams = Record<string, unknown>,
+        TQueryParams = Record<string, unknown>
+    > = BaseType<TBody, TParams, TQueryParams> & {
+        accountId: null;
+    };
+
+    type PrivateRquest<
+        TBody = Record<string, unknown>,
+        TParams = Record<string, unknown>,
+        TQueryParams = Record<string, unknown>
+    > = BaseType<TBody, TParams, TQueryParams> & {
+        accountId: string;
+    };
+
+    export type HttpRequest<
+        TType extends TRouteType,
+        TBody = Record<string, unknown>,
+        TParams = Record<string, unknown>,
+        TQueryParams = Record<string, unknown>
+    > = TType extends "public"
+        ? PublicRequest<TBody, TParams, TQueryParams>
+        : PrivateRquest<TBody, TParams, TQueryParams>;
 
     export type HttpResponse<TBody = undefined> = {
         statusCode: number;

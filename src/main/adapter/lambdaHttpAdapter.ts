@@ -12,7 +12,7 @@ import { lambdaErrorResponse } from "../utils/lambdaErrorResponse";
 
 type Event = APIGatewayProxyEventV2 | APIGatewayProxyEventV2WithJWTAuthorizer;
 
-export function lambdaHttpAdapter(controller: Controller<unknown>) {
+export function lambdaHttpAdapter(controller: Controller<any, unknown>) {
     return async (event: Event): Promise<APIGatewayProxyResultV2> => {
         try {
             const accountId =
