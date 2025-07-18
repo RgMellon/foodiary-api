@@ -67,6 +67,6 @@ export namespace Controller {
 
     export type HttpResponse<TBody = undefined> = {
         statusCode: number;
-        body: TBody;
+        body?: TBody;
     };
 }
