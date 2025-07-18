@@ -7,14 +7,14 @@ export class ForgotPasswordUseCase {
 
     async execute({
         email,
-    }: SignInUseCase.Input): Promise<SignInUseCase.Output> {
+    }: ForgotPasswordUseCase.Input): Promise<ForgotPasswordUseCase.Output> {
         return await this.authGateway.forgotPassword({
             email,
         });
     }
 }
 
-export namespace SignInUseCase {
+export namespace ForgotPasswordUseCase {
     export type Input = {
         email: string;
     };

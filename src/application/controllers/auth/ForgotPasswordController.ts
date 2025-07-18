@@ -1,4 +1,4 @@
-import { ForgotPasswordUseCase } from "@application/usecases/auth/SignInUseCase copy";
+import { ForgotPasswordUseCase } from "@application/usecases/auth/ForgotPasswordUseCase";
 import { Injectable } from "@kernel/decorators/Injectable";
 import { Schema } from "@kernel/decorators/Schema";
 import { Controller } from "src/contracts/Controller";
