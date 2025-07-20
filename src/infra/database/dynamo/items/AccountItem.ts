@@ -1,7 +1,7 @@
 import { Account } from "@application/entities/Account";
 
 export class AccountItem {
-    private readonly type = "ACCOUNT";
+    private readonly type = "Account";
     private readonly keys: AccountItem.KEYS;
 
     constructor(private readonly attrs: AccountItem.Attributes) {
@@ -71,6 +71,6 @@ export namespace AccountItem {
 
     export type ItemType = Attributes &
         KEYS & {
-            type: "ACCOUNT";
+            type: "Account";
         };
 }
