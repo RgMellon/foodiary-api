@@ -15,6 +15,8 @@ export class Profile {
 
     goal: Profile.Goal;
 
+    accountId: string;
+
     constructor(attrs: Profile.Attributes) {
         this.activityLevel = attrs.activityLevel;
         this.goal = attrs.goal;
@@ -23,12 +25,14 @@ export class Profile {
         this.gender = attrs.gender;
         this.height = attrs.height;
         this.weight = attrs.weight;
+        this.accountId = attrs.accountId;
         this.createdAt = attrs.createdAt ?? new Date();
     }
 }
 
 export namespace Profile {
     export type Attributes = {
+        accountId: string;
         createdAt?: Date;
         name: string;
         birthDate: Date;
