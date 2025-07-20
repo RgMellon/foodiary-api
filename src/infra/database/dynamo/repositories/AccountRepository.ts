@@ -10,11 +10,6 @@ export class AccountRepository {
     constructor(private readonly config: AppConfig) {}
 
     async findByEmail(email: string): Promise<Account | null> {
-        console.log({
-            ":GSI1PK": AccountItem.getGSI1PK(email),
-            ":GSI1SK": AccountItem.getGSI1SK(email),
-        });
-
         const comand = new QueryCommand({
             IndexName: "GSI1",
             TableName: this.config.database.dynamodb.mainTable,
@@ -32,9 +27,7 @@ export class AccountRepository {
         });
 
         const { Items = [] } = await DynamoClient.send(comand);
-        console.log({ comand });
         const account = Items[0] as AccountItem.ItemType | undefined;
-        console.log({ account });
         if (!account) {
             return null;
         }
