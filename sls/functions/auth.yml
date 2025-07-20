@@ -31,11 +31,11 @@ confirmForgotPassword:
     handler: src/main/functions/auth/confirmForgotPassword.handler
     events:
         - httpApi:
-            path: /auth/confirm-forgot-password
+            path: /auth/forgot-password/confirm
             method: POST
 
 presignUpTrigger:
-    handler: src/main/functions/auth/preSignUpTrigger.handler
+    handler: src/main/functions/auth/cognitoTriggers/preSignUpTrigger.handler
     events:
         - cognitoUserPool:
             pool: ${self:custom.cognito.PoolName}
@@ -44,9 +44,16 @@ presignUpTrigger:
             forceDeploy: true
 
 preTokenGenerationTrigger:
-    handler: src/main/functions/auth/preTokenGenerationTrigger.handler
+    handler: src/main/functions/auth/cognitoTriggers/preTokenGenerationTrigger.handler
     # Configuracao feita manualmente para suportar o eventV2  no UserPool.yml
     # Fazer a config la dentro do console, pois nao tem acesso da v2 do trigger usando o serverless
 
-
+customMessageTrigger:
+    handler: src/main/functions/auth/cognitoTriggers/customMessageTrigger.handler
+    events:
+        - cognitoUserPool:
+            pool: ${self:custom.cognito.PoolName}
+            trigger: CustomMessage
+            existing: true
+            forceDeploy: true
 

@@ -41,7 +41,6 @@ Resources:
             Principal: cognito-idp.amazonaws.com
             SourceArn: !GetAtt UserPool.Arn
 
-
     UserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
