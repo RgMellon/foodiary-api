@@ -9,13 +9,17 @@ import { GoalItem } from "../items/GoalItem";
 export class GoalRepository {
     constructor(private readonly config: AppConfig) {}
 
-    async create(goal: Goal): Promise<void> {
+    getPutCommandInput(goal: Goal) {
         const goalItem = GoalItem.fromEntity(goal);
 
-        const command = new PutCommand({
+        return {
             TableName: this.config.database.dynamodb.mainTable,
             Item: goalItem.toItem(),
-        });
+        };
+    }
+
+    async create(goal: Goal): Promise<void> {
+        const command = new PutCommand(this.getPutCommandInput(goal));
 
         await DynamoClient.send(command);
     }
