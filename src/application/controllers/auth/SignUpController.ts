@@ -20,10 +20,11 @@ export class SignUpController extends Controller<
     async handle(
         request: Controller.HttpRequest<"public", SignUpBody>
     ): Promise<Controller.HttpResponse<SignUpController.Response>> {
-        const { account } = request.body;
-        const { accessToken, refreshToken } = await this.signUpUseCase.execute(
-            account
-        );
+        const { account, profile } = request.body;
+        const { accessToken, refreshToken } = await this.signUpUseCase.execute({
+            account,
+            profile,
+        });
 
         return {
             statusCode: 200,

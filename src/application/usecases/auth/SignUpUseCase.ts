@@ -1,4 +1,5 @@
 import { Account } from "@application/entities/Account";
+import { Profile } from "@application/entities/Profile";
 import { EmailAlreadyUsed } from "@application/errors/application/EmailAlreadyUsed";
 import { Injectable } from "@kernel/decorators/Injectable";
 import { AccountRepository } from "src/infra/database/dynamo/repositories/AccountRepository";
@@ -12,8 +13,8 @@ export class SignUpUseCase {
     ) {}
 
     async execute({
-        email,
-        password,
+        account: { email, password },
+        profile,
     }: SignUpUseCase.Input): Promise<SignUpUseCase.Output> {
         const emailAlreadyUsed = await this.accountRespository.findByEmail(
             email
@@ -42,6 +43,7 @@ export class SignUpUseCase {
             password,
         });
 
+        console.log("###profile", profile);
         return {
             accessToken,
             refreshToken,
@@ -51,8 +53,19 @@ export class SignUpUseCase {
 
 export namespace SignUpUseCase {
     export type Input = {
-        email: string;
-        password: string;
+        profile: {
+            name: string;
+            birthDate: Date;
+            gender: Profile.Gender;
+            height: number;
+            weight: number;
+            activityLevel: Profile.ActivityLevel;
+            goal: Profile.Goal;
+        };
+        account: {
+            email: string;
+            password: string;
+        };
     };
 
     export type Output = {
