@@ -1,5 +1,6 @@
 import { InvalidRefreshToken } from "@application/errors/application/InvalidRefreshToken";
 import {
+    AdminDeleteUserCommand,
     ConfirmForgotPasswordCommand,
     ForgotPasswordCommand,
     GetTokensFromRefreshTokenCommand,
@@ -136,6 +137,15 @@ export class AuthGateway {
 
         await cognitoClient.send(command);
     }
+
+    async removeUser({ externalId }: AuthGateway.RemoveUserParams) {
+        const command = new AdminDeleteUserCommand({
+            Username: externalId,
+            UserPoolId: this.appConfig.auth.cognito.pool.id,
+        });
+
+        await cognitoClient.send(command);
+    }
 }
 
 namespace AuthGateway {
@@ -176,5 +186,9 @@ namespace AuthGateway {
         code: string;
         password: string;
         email: string;
+    };
+
+    export type RemoveUserParams = {
+        externalId: string;
     };
 }
