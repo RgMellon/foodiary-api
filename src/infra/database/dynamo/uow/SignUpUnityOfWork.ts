@@ -21,7 +21,7 @@ export class SignUpUnityOfWork extends UnityOfWork {
         this.addPut(this.accountRepository.getPutCommandInput(account));
         this.addPut(this.profileRepository.getPutCommandInput(profile));
         this.addPut(this.goalRepository.getPutCommandInput(goal));
-        
+
         this.commit();
     }
 }

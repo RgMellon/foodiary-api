@@ -6,68 +6,80 @@ import { Injectable } from "@kernel/decorators/Injectable";
 import { AccountRepository } from "src/infra/database/dynamo/repositories/AccountRepository";
 import { SignUpUnityOfWork } from "src/infra/database/dynamo/uow/SignUpUnityOfWork";
 import { AuthGateway } from "src/infra/gateways/AuthGateway";
+import { Saga } from "src/shared/saga/Saga";
 
 @Injectable()
 export class SignUpUseCase {
     constructor(
         private readonly authGateway: AuthGateway,
         private readonly accountRespository: AccountRepository,
-        private readonly singupUow: SignUpUnityOfWork
+        private readonly singupUow: SignUpUnityOfWork,
+        private readonly saga: Saga
     ) {}
 
     async execute({
         account: { email, password },
         profile: profileData,
     }: SignUpUseCase.Input): Promise<SignUpUseCase.Output> {
-        const emailAlreadyUsed = await this.accountRespository.findByEmail(
-            email
-        );
+        return this.saga.run(async () => {
+            const emailAlreadyUsed = await this.accountRespository.findByEmail(
+                email
+            );
 
-        if (emailAlreadyUsed) {
-            throw new EmailAlreadyUsed();
-        }
+            if (emailAlreadyUsed) {
+                throw new EmailAlreadyUsed();
+            }
 
-        const account = new Account({
-            email,
+            const account = new Account({
+                email,
+            });
+
+            const profile = new Profile({
+                ...profileData,
+                accountId: account.id,
+            });
+
+            const goal = new Goal({
+                accountId: account.id,
+                calories: 2000,
+                carbohydrates: 150,
+                proteins: 300,
+                fat: 50,
+                createdAt: new Date(),
+            });
+
+            const { externalId } = await this.authGateway.signUp({
+                email: email,
+                password: password,
+                internalId: account.id,
+            });
+
+            this.saga.addCompensation(() =>
+                this.authGateway.removeUser({
+                    externalId,
+                })
+            );
+
+            account.externalId = externalId;
+
+            await this.singupUow.run({
+                account,
+                goal,
+                profile,
+            });
+
+            const { accessToken, refreshToken } = await this.authGateway.signIn(
+                {
+                    email,
+                    password,
+                }
+            );
+
+            return {
+                accessToken,
+                refreshToken,
+            };
         });
-
-        const profile = new Profile({
-            ...profileData,
-            accountId: account.id,
-        });
-
-        const goal = new Goal({
-            accountId: account.id,
-            calories: 2000,
-            carbohydrates: 150,
-            proteins: 300,
-            fat: 50,
-            createdAt: new Date(),
-        });
-
-        const { externalId } = await this.authGateway.signUp({
-            email: email,
-            password: password,
-            internalId: account.id,
-        });
-
-        account.externalId = externalId;
-
-        await this.singupUow.run({
-            account,
-            goal,
-            profile,
-        });
-
-        const { accessToken, refreshToken } = await this.authGateway.signIn({
-            email,
-            password,
-        });
-
-        return {
-            accessToken,
-            refreshToken,
-        };
     }
 }
 
