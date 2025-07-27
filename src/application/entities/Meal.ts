@@ -25,28 +25,28 @@ export class Meal {
         this.status = attrs.status;
         this.inputType = attrs.inputType;
         this.inputFileKey = attrs.inputFileKey;
-        this.attempts = attrs.attempts;
-        this.icon = attrs.icon;
+        this.attempts = attrs.attempts ?? 0;
+        this.icon = attrs.icon ?? "";
         this.id = attrs.id ?? KSUID.randomSync().string;
-        this.foods = attrs.foods;
+        this.foods = attrs.foods ?? [];
     }
 }
 
 export namespace Meal {
     export type Attributes = {
-        id: string;
+        id?: string;
         accountId: string;
         createdAt?: Date;
         status: Status;
         inputType: InputType;
         inputFileKey: string;
-        attempts: number;
-        icon: string;
-        foods: Meal.Food[];
+        attempts?: number;
+        icon?: string;
+        foods?: Meal.Food[];
     };
 
     export enum Status {
-        PENDING = "PENDING",
+        UPLOADING = "UPLOADING",
         QUEUED = "QUEUED",
         PROCESSING = "PROCESSING",
         SUCCESS = "SUCESS",
