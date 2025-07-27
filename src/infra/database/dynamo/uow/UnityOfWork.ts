@@ -4,7 +4,8 @@
  * Implementa o padrão Unit of Work para garantir a consistência e integridade das operações de escrita no DynamoDB.
  *
  * O principal objetivo dessa implementação é agrupar múltiplas operações (como inserts, updates e deletes) em uma única transação.
- * Assim, todas as alterações são aplicadas de uma vez só, evitando que o banco de dados fique em um estado inconsistente caso alguma operação falhe.
+ * Assim, todas as alterações são aplicadas de uma vez só, evitando que o banco de dados fique em um estad
+ * o inconsistente caso alguma operação falhe.
  *
  * Na prática, isso é fundamental em cenários onde precisamos persistir dados em diferentes tabelas ou entidades de forma atômica,
  * como no cadastro de um novo usuário, onde criamos registros em Account, Profile e Goal simultaneamente.
