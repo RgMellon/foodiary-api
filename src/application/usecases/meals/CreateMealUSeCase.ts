@@ -1,18 +1,23 @@
 import { Meal } from "@application/entities/Meal";
 import { Injectable } from "@kernel/decorators/Injectable";
+import { MealRepository } from "src/infra/database/dynamo/repositories/MealRepository";
 
 @Injectable()
 export class CreateMealUseCase {
-    execute({
+    constructor(private readonly mealRepository: MealRepository) {}
+
+    async execute({
         accountId,
         file,
-    }: CreateMealUseCase.Input): CreateMealUseCase.Output {
+    }: CreateMealUseCase.Input): Promise<CreateMealUseCase.Output> {
         const meal = new Meal({
             accountId,
             inputType: file.type,
             status: Meal.Status.UPLOADING,
             inputFileKey: "TESTE",
         });
+
+        await this.mealRepository.create(meal);
 
         return {
             mealId: meal.id,
