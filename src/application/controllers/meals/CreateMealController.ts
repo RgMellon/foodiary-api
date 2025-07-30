@@ -25,7 +25,7 @@ export class CreateMealController extends Controller<
         Controller.HttpResponse<CreateMealController.Response>
     > {
         const { file } = body;
-        await this.createMealUseCase.execute({
+        const { mealId } = await this.createMealUseCase.execute({
             accountId,
             file: {
                 size: file.size,
@@ -38,7 +38,7 @@ export class CreateMealController extends Controller<
         return {
             statusCode: 200,
             body: {
-                accountId: accountId,
+                mealId,
             },
         };
     }
@@ -46,6 +46,6 @@ export class CreateMealController extends Controller<
 
 namespace CreateMealController {
     export type Response = {
-        accountId: string;
+        mealId: string;
     };
 }
