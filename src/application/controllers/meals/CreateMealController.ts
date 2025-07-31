@@ -25,19 +25,21 @@ export class CreateMealController extends Controller<
         Controller.HttpResponse<CreateMealController.Response>
     > {
         const { file } = body;
-        const { mealId } = await this.createMealUseCase.execute({
-            accountId,
-            file: {
-                size: file.size,
-                type:
-                    file.type === "image/jpeg"
-                        ? Meal.InputType.PICTURE
-                        : Meal.InputType.AUDIO,
-            },
-        });
+        const { uploadSignature, mealId } =
+            await this.createMealUseCase.execute({
+                accountId,
+                file: {
+                    size: file.size,
+                    type:
+                        file.type === "image/jpeg"
+                            ? Meal.InputType.PICTURE
+                            : Meal.InputType.AUDIO,
+                },
+            });
         return {
             statusCode: 200,
             body: {
+                uploadSignature,
                 mealId,
             },
         };
@@ -46,6 +48,7 @@ export class CreateMealController extends Controller<
 
 namespace CreateMealController {
     export type Response = {
+        uploadSignature: string;
         mealId: string;
     };
 }

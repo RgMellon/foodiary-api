@@ -14,42 +14,51 @@ export class MealsFileStorageGateway {
         inputFile,
     }: MealsFileStorageGateway.GenerateFileKeyParams) {
         const extension = inputFile === Meal.InputType.AUDIO ? "m4a" : "jpeg";
-        const fileName = `${KSUID.randomSync().string}/${extension}`;
+        const filename = `${KSUID.randomSync().string}.${extension}`;
 
-        return `${accountId}/${fileName}`;
+        return `${accountId}/${filename}`;
     }
 
     async createPOST({
-        fileKey,
-        fileSize,
-        inputType,
+        file,
+        mealId,
     }: MealsFileStorageGateway.CreatePresignedPostParams): Promise<MealsFileStorageGateway.CreatePostResult> {
         const bucket = this.appConfig.storage.mealsBucket;
         const contentType =
-            inputType === Meal.InputType.AUDIO ? "audio/m4a" : "image/jpeg";
+            file.inputType === Meal.InputType.AUDIO
+                ? "audio/m4a"
+                : "image/jpeg";
 
         const FIVE_MINUTES = 5 * 60;
 
         const { fields, url } = await createPresignedPost(s3Client, {
             Bucket: bucket,
-            Key: fileKey,
+            Key: file.key,
             Expires: FIVE_MINUTES,
             Conditions: [
                 { bucket },
-                ["eq", "$Key", fileKey],
+                ["eq", "$key", file.key],
                 ["eq", "$Content-Type", contentType],
-                ["content-length-range", fileSize, fileSize],
+                ["content-length-range", file.size, file.size],
             ],
+            Fields: {
+                "x-amz-meta-mealid": mealId,
+            },
         });
 
         const uploadSignature = Buffer.from(
-            JSON.stringify({ url, fields })
+            JSON.stringify({
+                url,
+                fields: {
+                    ...fields,
+                    "Content-Type": contentType,
+                },
+            })
         ).toString("base64");
 
         return {
             uploadSignature,
         };
-        // s3Client.send({});
     }
 }
 
@@ -60,9 +69,12 @@ export namespace MealsFileStorageGateway {
     };
 
     export type CreatePresignedPostParams = {
-        inputType: Meal.InputType;
-        fileKey: string;
-        fileSize: number;
+        file: {
+            inputType: Meal.InputType;
+            key: string;
+            size: number;
+        };
+        mealId: string;
     };
 
     export type CreatePostResult = {
