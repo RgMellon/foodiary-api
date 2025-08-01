@@ -34,6 +34,7 @@ export class MealItem {
             id: mealItem.id,
             createdAt: new Date(mealItem.createdAt),
             status: mealItem.status,
+            name: mealItem.name,
         });
     }
 
@@ -80,6 +81,7 @@ export namespace MealItem {
         icon: string;
         foods: Meal.Food[];
         createdAt: string;
+        name: string;
     };
 
     export type KEYS = {

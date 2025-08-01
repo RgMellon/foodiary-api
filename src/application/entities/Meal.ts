@@ -17,6 +17,8 @@ export class Meal {
 
     icon: string;
 
+    name: string;
+
     foods: Meal.Food[];
 
     constructor(attrs: Meal.Attributes) {
@@ -29,12 +31,14 @@ export class Meal {
         this.icon = attrs.icon ?? "";
         this.id = attrs.id ?? KSUID.randomSync().string;
         this.foods = attrs.foods ?? [];
+        this.name = attrs.name ?? "";
     }
 }
 
 export namespace Meal {
     export type Attributes = {
         id?: string;
+        name: string;
         accountId: string;
         createdAt?: Date;
         status: Status;
