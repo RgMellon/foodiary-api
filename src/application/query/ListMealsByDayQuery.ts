@@ -15,12 +15,18 @@ export class ListMealByDayQuery {
     }: ListMealByDayQuery.Input): Promise<ListMealByDayQuery.Output> {
         const command = new QueryCommand({
             TableName: this.appConfig.database.dynamodb.mainTable,
+            IndexName: "GSI1",
             Limit: 1,
             ProjectionExpression:
-                "#GS1PK, #id, #createdAt, #name, #icon, #foods",
-            KeyConditionExpression: "#GS1PK = :GS1PK",
+                "#GSI1PK, #id, #createdAt, #name, #icon, #foods",
+            KeyConditionExpression: "#GSI1PK = :GSI1PK",
             ExpressionAttributeNames: {
-                "#GS1PK": "GS1PK",
+                "#GSI1PK": "GSI1PK",
+                "#name": "name",
+                "#id": "id",
+                "#createdAt": "createdAt",
+                "#icon": "icon",
+                "#foods": "foods",
             },
 
             ExpressionAttributeValues: {

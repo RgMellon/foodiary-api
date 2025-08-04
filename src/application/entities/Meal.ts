@@ -38,7 +38,7 @@ export class Meal {
 export namespace Meal {
     export type Attributes = {
         id?: string;
-        name: string;
+        name?: string;
         accountId: string;
         createdAt?: Date;
         status: Status;
