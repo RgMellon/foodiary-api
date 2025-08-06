@@ -2,6 +2,7 @@ import { ErrorCode } from "../ErrorCode";
 import { ApplicationError } from "./ApplicationError";
 
 export class EmailAlreadyUsed extends ApplicationError {
+    statusCode?: number | undefined;
     code: ErrorCode;
 
     constructor(message?: any, code?: ErrorCode) {

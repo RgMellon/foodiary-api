@@ -1,5 +1,6 @@
 import { Meal } from "@application/entities/Meal";
-import { PutCommand, PutCommandInput } from "@aws-sdk/lib-dynamodb";
+import { ResourceNotFound } from "@application/errors/application/ResourceNotFound";
+import { GetCommand, PutCommand, PutCommandInput } from "@aws-sdk/lib-dynamodb";
 import { Injectable } from "@kernel/decorators/Injectable";
 import { DynamoClient } from "src/infra/client/DynamoClient";
 import { AppConfig } from "src/shared/config/AppConfig";
@@ -23,4 +24,35 @@ export class MealRepository {
 
         await DynamoClient.send(command);
     }
+
+    async findById({ accountId, mealId }: MealRepository.FindByIdParams) {
+        const command = new GetCommand({
+            TableName: this.config.database.dynamodb.mainTable,
+            Key: {
+                PK: MealItem.getPk({
+                    accountId,
+                    mealId,
+                }),
+                SK: MealItem.getSK({
+                    accountId,
+                    mealId,
+                }),
+            },
+        });
+
+        const { Item: mealItem } = await DynamoClient.send(command);
+
+        if (!mealItem) {
+            throw new ResourceNotFound("Meal not found");
+        }
+
+        return MealItem.toEntity(mealItem as MealItem.ItemType);
+    }
+}
+
+export namespace MealRepository {
+    export type FindByIdParams = {
+        accountId: string;
+        mealId: string;
+    };
 }

@@ -6,8 +6,14 @@ export class MealItem {
 
     constructor(private readonly attrs: MealItem.Attributes) {
         this.keys = {
-            PK: MealItem.getPk(this.attrs.id),
-            SK: MealItem.getSK(this.attrs.id),
+            PK: MealItem.getPk({
+                accountId: this.attrs.accountId,
+                mealId: this.attrs.id,
+            }),
+            SK: MealItem.getSK({
+                accountId: this.attrs.accountId,
+                mealId: this.attrs.id,
+            }),
             GSI1PK: MealItem.getGSI1PK({
                 accountId: attrs.accountId,
                 date: new Date(attrs.createdAt),
@@ -46,12 +52,18 @@ export class MealItem {
         };
     }
 
-    static getPk(mealId: string): MealItem.KEYS["PK"] {
-        return `MEAL#${mealId}`;
+    static getPk({
+        accountId,
+        mealId,
+    }: MealItem.GetPkParams): MealItem.KEYS["PK"] {
+        return `ACCOUNT#${accountId}#MEAL#${mealId}`;
     }
 
-    static getSK(mealId: string): MealItem.KEYS["SK"] {
-        return `MEAL#${mealId}`;
+    static getSK({
+        accountId,
+        mealId,
+    }: MealItem.GetSkParams): MealItem.KEYS["SK"] {
+        return `ACCOUNT#${accountId}#MEAL#${mealId}`;
     }
 
     static getGSI1PK({
@@ -83,10 +95,10 @@ export namespace MealItem {
         createdAt: string;
         name: string;
     };
-
+    // Account#accountId#Meal#mealId
     export type KEYS = {
-        PK: `MEAL#${string}`;
-        SK: `MEAL#${string}`;
+        PK: `ACCOUNT#${string}#MEAL#${string}`;
+        SK: `ACCOUNT#${string}#MEAL#${string}`;
         GSI1PK: `MEALS#${string}#${string}-${string}-${string}`;
         GSI1SK: `MEAL#${string}`;
     };
@@ -99,5 +111,15 @@ export namespace MealItem {
     export type GS1PKParams = {
         accountId: string;
         date: Date;
+    };
+
+    export type GetPkParams = {
+        mealId: string;
+        accountId: string;
+    };
+
+    export type GetSkParams = {
+        mealId: string;
+        accountId: string;
     };
 }
