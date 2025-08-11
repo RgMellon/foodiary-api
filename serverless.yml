@@ -19,7 +19,6 @@ provider:
                 audience:
                     - !Ref UserPoolClient
 
-
 package:
     individually: true
 
@@ -36,8 +35,10 @@ functions:
     - ${file(./sls/functions/meal.yml)}
     - ${file(./sls/functions/account.yml)}
     - ${file(./sls/functions/profile.yml)}
+    - ${file(./sls/functions/goal.yml)}
 
 resources:
     - ${file(./sls/resources/UserPool.yml)}
     - ${file(./sls/resources/MainTable.yml)}
     - ${file(./sls/resources/MealsBucket.yml)}
+    - ${file(./sls/resources/MealsBucketCDN.yml)}
