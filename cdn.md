@@ -1,4 +1,4 @@
-# AWS CloudFront CDN for S3 Bucket – Documentation
+# AWS CloudFront CDN para Bucket S3 – Documentação
 
 ## Introdução: O que é uma CDN?
 
@@ -48,6 +48,42 @@ Abaixo estão as principais propriedades do arquivo de configuração de infraes
     - **CachePolicyId:** Política de cache gerenciada pela AWS.
   - **ViewerCertificate:**
     - **CloudFrontDefaultCertificate:** Usa o certificado padrão do CloudFront para HTTPS.
+
+### MealsBucketCDNPolicy
+
+Este recurso define uma política de acesso ao bucket S3, permitindo que apenas o CloudFront acesse os objetos do bucket. Isso é fundamental para garantir que os arquivos do S3 não fiquem públicos, sendo acessíveis apenas via CDN.
+
+- **Type:** `AWS::S3::BucketPolicy`
+  - Especifica que o recurso é uma política de acesso para um bucket S3.
+- **Properties:**
+  - **Bucket:** Referência ao bucket S3 que receberá a política.
+  - **PolicyDocument:** Documento que define as regras de acesso.
+    - **Version:** Versão do documento de política (2008-10-17 é padrão para S3).
+    - **Id:** Identificador da política.
+    - **Statement:** Lista de regras de acesso.
+      - **Sid:** Identificador da regra.
+      - **Effect:** Define se a regra permite (`Allow`) ou nega (`Deny`) acesso.
+      - **Principal:** Define quem pode acessar (neste caso, o serviço CloudFront).
+      - **Action:** Ação permitida (aqui, `s3:GetObject` para leitura dos objetos).
+      - **Resource:** Especifica quais objetos podem ser acessados (todos do bucket).
+      - **Condition:** Condição adicional para o acesso.
+        - **StringEquals:** Restringe o acesso para requisições originadas da distribuição CloudFront específica, usando o ARN da distribuição.
+
+### Resumo das Propriedades
+
+- **Type:** Tipo do recurso AWS.
+- **Properties:** Propriedades do recurso.
+- **Bucket:** Bucket S3 alvo da política.
+- **PolicyDocument:** Documento de política de acesso.
+  - **Version:** Versão da política.
+  - **Id:** Identificador único.
+  - **Statement:** Regras de acesso.
+    - **Sid:** Identificador da regra.
+    - **Effect:** Permissão ou negação.
+    - **Principal:** Quem pode acessar.
+    - **Action:** Ações permitidas.
+    - **Resource:** Recursos afetados.
+    - **Condition:** Condições para acesso.
 
 ## Referências
 

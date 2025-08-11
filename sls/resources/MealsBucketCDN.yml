@@ -31,3 +31,21 @@ Resources:
                     CachePolicyId: 2e54312d-136d-493c-8eb9-b001f22f67d2
                 ViewerCertificate:
                     CloudFrontDefaultCertificate: true
+
+    MealsBucketCDNPolicy:
+        Type: AWS::S3::BucketPolicy
+        Properties:
+            Bucket: !Ref MealsBucket
+            PolicyDocument:
+                Version: 2008-10-17
+                Id: PolicyForCloudFrontPrivateContent
+                Statement:
+                    - Sid: AllowCloudFrontServicePrincipal
+                      Effect: Allow
+                      Principal:
+                          Service: cloudfront.amazonaws.com
+                      Action: s3:GetObject
+                      Resource: !Sub "${MealsBucket.Arn}/*"
+                      Condition:
+                          StringEquals:
+                              AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${MealsBucketCDN}"
