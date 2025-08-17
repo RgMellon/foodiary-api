@@ -2,23 +2,24 @@ createMeal:
     handler: src/main/functions/meals/createMeal.handler
     events:
         - httpApi:
-            path: /meals
-            method: POST
-            authorizer:
-                name: CognitoAuthorizer
+              path: /meals
+              method: POST
+              authorizer:
+                  name: CognitoAuthorizer
 listMealsByDay:
     handler: src/main/functions/meals/listMealsByDay.handler
     events:
         - httpApi:
-            path: /meals
-            method: GET
-            authorizer:
-                name: CognitoAuthorizer
+              path: /meals
+              method: GET
+              authorizer:
+                  name: CognitoAuthorizer
+
 getListMealById:
     handler: src/main/functions/meals/getListMealById.handler
     events:
         - httpApi:
-            path: /meals/{id}
-            method: GET
-            authorizer:
-                name: CognitoAuthorizer
+              path: /meals/{id}
+              method: GET
+              authorizer:
+                  name: CognitoAuthorizer

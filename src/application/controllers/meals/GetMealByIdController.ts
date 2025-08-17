@@ -48,7 +48,7 @@ namespace GetMealByIdController {
             id: string;
             status: Meal.Status;
             inputType: Meal.InputType;
-            inputFileKey: string;
+            inputFileUrl: string;
             name: string;
             createdAt: Date;
             foods: Meal.Food[];

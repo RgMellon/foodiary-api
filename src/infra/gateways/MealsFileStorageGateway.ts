@@ -60,6 +60,10 @@ export class MealsFileStorageGateway {
             uploadSignature,
         };
     }
+
+    getFileUrl(fileKey: string) {
+        return `https://${this.appConfig.cdn.mealsCdn}/${fileKey}`;
+    }
 }
 
 export namespace MealsFileStorageGateway {

@@ -1,10 +1,14 @@
 import { Meal } from "@application/entities/Meal";
 import { Injectable } from "@kernel/decorators/Injectable";
 import { MealRepository } from "src/infra/database/dynamo/repositories/MealRepository";
+import { MealsFileStorageGateway } from "src/infra/gateways/MealsFileStorageGateway";
 
 @Injectable()
 export class GetMealByIdUseCase {
-    constructor(private readonly mealRespository: MealRepository) {}
+    constructor(
+        private readonly mealRespository: MealRepository,
+        readonly mealsFileStorageGateway: MealsFileStorageGateway
+    ) {}
 
     async execute({
         accountId,
@@ -24,7 +28,9 @@ export class GetMealByIdUseCase {
                 name: mealItem.name,
                 status: mealItem.status,
                 inputType: mealItem.inputType,
-                inputFileKey: mealItem.inputFileKey,
+                inputFileUrl: this.mealsFileStorageGateway.getFileUrl(
+                    mealItem.inputFileKey
+                ),
             },
         };
     }
@@ -41,7 +47,7 @@ export namespace GetMealByIdUseCase {
             id: string;
             status: Meal.Status;
             inputType: Meal.InputType;
-            inputFileKey: string;
+            inputFileUrl: string;
             name: string;
             createdAt: Date;
             foods: Meal.Food[];
