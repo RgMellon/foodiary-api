@@ -1,3 +1,4 @@
+import { MealUploadedUseCase } from "@application/usecases/meals/MealUploadedUseCase";
 import { Injectable } from "@kernel/decorators/Injectable";
 import {
     IFileEventHandle,
@@ -6,9 +7,9 @@ import {
 
 @Injectable()
 export class MealUploadedFileEventHandler implements IFileEventHandler {
+    constructor(private readonly mealUploadedUseCase: MealUploadedUseCase) {}
+
     async handle({ fileKey }: IFileEventHandle.Input): Promise<void> {
-        console.log({
-            MealUploadedFileEventHandler: fileKey,
-        });
+        await this.mealUploadedUseCase.execute({ fileKey });
     }
 }
