@@ -1,6 +1,11 @@
 import { Meal } from "@application/entities/Meal";
 import { ResourceNotFound } from "@application/errors/application/ResourceNotFound";
-import { GetCommand, PutCommand, PutCommandInput } from "@aws-sdk/lib-dynamodb";
+import {
+    GetCommand,
+    PutCommand,
+    PutCommandInput,
+    UpdateCommand,
+} from "@aws-sdk/lib-dynamodb";
 import { Injectable } from "@kernel/decorators/Injectable";
 import { DynamoClient } from "src/infra/client/DynamoClient";
 import { AppConfig } from "src/shared/config/AppConfig";
@@ -47,6 +52,41 @@ export class MealRepository {
         }
 
         return MealItem.toEntity(mealItem as MealItem.ItemType);
+    }
+
+    async save(meal: Meal) {
+        const command = new UpdateCommand({
+            TableName: this.config.database.dynamodb.mainTable,
+            Key: {
+                PK: MealItem.getPk({
+                    mealId: meal.id,
+                    accountId: meal.accountId,
+                }),
+                SK: MealItem.getSK({
+                    mealId: meal.id,
+                    accountId: meal.accountId,
+                }),
+            },
+            ReturnValues: "NONE",
+            UpdateExpression:
+                "SET #status = :status, #attempts = :attempts, #icon = :icon, #name = :name, #foods = :foods",
+            ExpressionAttributeNames: {
+                "#status": "status",
+                "#attempts": "attempts",
+                "#icon": "icon",
+                "#name": "name",
+                "#foods": "foods",
+            },
+            ExpressionAttributeValues: {
+                ":status": meal.status,
+                ":attempts": meal.attempts,
+                ":icon": meal.icon,
+                ":name": meal.name,
+                ":foods": meal.foods,
+            },
+        });
+
+        await DynamoClient.send(command);
     }
 }
 

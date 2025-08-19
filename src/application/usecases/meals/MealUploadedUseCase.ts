@@ -1,3 +1,4 @@
+import { Meal } from "@application/entities/Meal";
 import { Injectable } from "@kernel/decorators/Injectable";
 import { MealRepository } from "src/infra/database/dynamo/repositories/MealRepository";
 import { MealsFileStorageGateway } from "src/infra/gateways/MealsFileStorageGateway";
@@ -15,12 +16,16 @@ export class MealUploadedUseCase {
         const { accountId, mealId } =
             await this.mealsFileStorageGateway.getMetaData({ fileKey });
 
-        const mealItem = await this.mealRespository.findById({
+        const meal = await this.mealRespository.findById({
             accountId,
             mealId,
         });
 
-        console.log(JSON.stringify(mealItem, null, 2));
+        console.log(JSON.stringify(meal, null, 2));
+
+        meal.status = Meal.Status.QUEUED;
+
+        await this.mealRespository.save(meal);
     }
 }
 
