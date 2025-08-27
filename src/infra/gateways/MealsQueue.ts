@@ -12,13 +12,15 @@ export class MealsQueue {
             QueueUrl: this.appConfig.mealsQueue.mealsQueueUrl,
             MessageBody: JSON.stringify(message),
         });
+
+        console.log("publish");
         await sqsClient.send(command);
     }
 }
 
 export namespace MealsQueue {
     export type Message = {
-        clientId: string;
+        accountId: string;
         mealId: string;
     };
 }

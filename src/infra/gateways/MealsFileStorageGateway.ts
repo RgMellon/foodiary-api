@@ -78,8 +78,9 @@ export class MealsFileStorageGateway {
         });
 
         const { Metadata = {} } = await s3Client.send(command);
+        console.log({ Metadata, id: this.appConfig.storage.mealsBucket });
 
-        if (!Metadata.accountId || Metadata.mealid) {
+        if (!Metadata.accountid || !Metadata.mealid) {
             throw new ResourceNotFound(`Fail to get meta data from ${fileKey}`);
         }
 
