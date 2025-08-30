@@ -32,3 +32,12 @@ onMealFileUploaded:
               event: s3:ObjectCreated:*
               forceDeploy: true
               existing: true
+
+processMeal:
+    handler: src/main/functions/meals/processMeal.handler
+    memorySize: 1024 #1 giga for safety
+    timeout: 120 # 2 minutes
+    events:
+        - sqs:
+              bucket: !GetAtt MealsQueue
+              batchSize: 2
