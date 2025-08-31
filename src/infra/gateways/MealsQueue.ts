@@ -13,7 +13,6 @@ export class MealsQueue {
             MessageBody: JSON.stringify(message),
         });
 
-        console.log("publish");
         await sqsClient.send(command);
     }
 }

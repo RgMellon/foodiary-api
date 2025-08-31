@@ -39,5 +39,5 @@ processMeal:
     timeout: 120 # 2 minutes
     events:
         - sqs:
-              bucket: !GetAtt MealsQueue
+              arn: !GetAtt MealsQueue.Arn
               batchSize: 2
