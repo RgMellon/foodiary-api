@@ -7,7 +7,7 @@ import { MealsFileStorageGateway } from "src/infra/gateways/MealsFileStorageGate
 export class GetMealByIdUseCase {
     constructor(
         private readonly mealRespository: MealRepository,
-        readonly mealsFileStorageGateway: MealsFileStorageGateway
+        private readonly mealsFileStorageGateway: MealsFileStorageGateway
     ) {}
 
     async execute({
