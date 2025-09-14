@@ -3,7 +3,7 @@ import path from "path";
 
 const API_URL = "https://api.canto-do-codigo.app.br/meals";
 const TOKEN =
-    "eyJraWQiOiIxV0J0Y3VHcWV0d1JyS1dRVW5aYW5EZk4xbExwZzFRTFlQeTlWRmxxMVNBPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzMzNjMGFjYS0xMDkxLTcwODAtYjM1NS1kYjY4YjgyN2M5MjEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuc2EtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3NhLWVhc3QtMV80dXlTVjd5VXoiLCJjbGllbnRfaWQiOiI1Mm44bzZqa3MzMGkxZzUycTBpaXE1N3Q1MCIsIm9yaWdpbl9qdGkiOiIwNDk2YTk1Yi1mOGVlLTQ3Y2ItYmE0MC1lZmYzOGI0NTJkOGIiLCJpbnRlcm5hbElkIjoiMzByZVczMFNDVlh2SUIzOUNDSUgwNXV3T2RVIiwiZXZlbnRfaWQiOiJmNTBmN2I3ZS03ZDc2LTRhMDUtYWU1Mi1jODg3NTQ5YzM2NTAiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNzU2NTcyMjYxLCJleHAiOjE3NTY2MTU0NjAsImlhdCI6MTc1NjU3MjI2MSwianRpIjoiMDZmZWZlZmEtODVmNi00MGU2LWI4MDItYTFkZjAwMDFkOThhIiwidXNlcm5hbWUiOiIzMzNjMGFjYS0xMDkxLTcwODAtYjM1NS1kYjY4YjgyN2M5MjEifQ.Dq8JbDWNAZ5CA-XZIGxl4gqpSmVh1HfqoaO0sfXHOhzT2Dl8L0vehsx0IbIRdX4dSkjtEfCm5bxLMpe_T4Fk9E79N84JbX1mmUDvC3TWbG70rNmgB8mBScln2immkLI3-mRobxdkJbaQWcLgQrc0VmDpGIfNx_026t6jZx2PWbb5JLz3m5SpNPpL291tEp474TQVLbgOQldECmHxWHE1FosE4_lGqLHU3T9Ka13GgIw0E5A3RV_RgSF5-_DfOcgHtDnrrZQtRsjvBQLv-alsS8tCiYV53pNcu0Vc0PJe7ehpzDDl7p4mOGfwLJjmR8ujRwAm96zY5p2UKOAaMcG1yQ";
+    "eyJraWQiOiIxV0J0Y3VHcWV0d1JyS1dRVW5aYW5EZk4xbExwZzFRTFlQeTlWRmxxMVNBPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIyM2ZjN2ExYS05MDAxLTcwNGItNWM1Ny05MDk5N2EzMWYyMjMiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuc2EtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3NhLWVhc3QtMV80dXlTVjd5VXoiLCJjbGllbnRfaWQiOiI1Mm44bzZqa3MzMGkxZzUycTBpaXE1N3Q1MCIsIm9yaWdpbl9qdGkiOiJkMzU0NzEzZS05NGJhLTQzMDctOWQ3ZC0wZjdhNDViMmE5YmMiLCJpbnRlcm5hbElkIjoiMzJnc3VueDdZb1JwZlVKa1dHNDRmWkNIOUFOIiwiZXZlbnRfaWQiOiI4MjUyZjA2MS0wMTk1LTRhZGQtYjM1MC04YmE4YTMzOTQ2ZTQiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNzU3ODUzNzc2LCJleHAiOjE3NTc4OTY5NzYsImlhdCI6MTc1Nzg1Mzc3NiwianRpIjoiZmVlZTNmOTAtYTU3MS00NDBmLWI3MDctYTRhYzhkOTM5ZjRhIiwidXNlcm5hbWUiOiIyM2ZjN2ExYS05MDAxLTcwNGItNWM1Ny05MDk5N2EzMWYyMjMifQ.R2ZxxHdoro-gAc3Vo-pTXSKWpQt-cFgqfRUPOPYU9C2d1BWscWOW0p6corO8ZBLaUMrF1xYVGI-wQdiGxu_RhwFuPEUrnDTJoZu-qXVPb2C-sxHMCKl13c9CsVQiR_1dpJwd7TklVxFddXeVZpNp4VTLdLOySCEdWuze6_zWKcA_UunfVLyX1JdvDkn3U4jUhTZAW9omgLu2cvZ5v3z32DqYeXzTBhxD_xZjGGTG9jcYkDid9u_K9RC4ZDOVtYBgFuJ9d5EGOl7IKoOpJx54P7LT6B_nAC96PaTngek-TFIeSo5_1z-ESh6PylYPXci1wLWUlsnBmqBUDPz3YYAzFw";
 
 interface IPresignResponse {
     uploadSignature: string;
@@ -14,7 +14,10 @@ interface IPresignDecoded {
     fields: Record<string, string>;
 }
 
-async function readImageFile(filePath: string): Promise<{
+async function readFile(
+    filePath: string,
+    type: "audio/m4a" | "image/jpeg"
+): Promise<{
     data: Buffer;
     size: number;
     type: string;
@@ -24,7 +27,7 @@ async function readImageFile(filePath: string): Promise<{
     return {
         data,
         size: data.length,
-        type: "image/jpeg",
+        type,
     };
 }
 
@@ -96,18 +99,21 @@ async function uploadToS3(url: string, form: FormData): Promise<void> {
     console.log("🎉 Upload completed successfully");
 }
 
-async function uploadMealImage(filePath: string): Promise<void> {
+async function uploadFile(
+    filePath: string,
+    fileType: "audio/m4a" | "image/jpeg"
+): Promise<void> {
     try {
-        const { data, size, type } = await readImageFile(filePath);
+        const { data, size, type } = await readFile(filePath, fileType);
         const { url, fields } = await createMeal(type, size);
         const form = buildFormData(fields, data, path.basename(filePath), type);
         await uploadToS3(url, form);
     } catch (err) {
-        console.error("❌ Error during uploadMealImage:", err);
+        console.error("❌ Error during uploadFile:", err);
         throw err;
     }
 }
 
-uploadMealImage(path.resolve(__dirname, "assets", "dino.jpeg")).catch(() =>
-    process.exit(1)
+uploadFile(path.resolve(__dirname, "assets", "audio.m4a"), "audio/m4a").catch(
+    () => process.exit(1)
 );

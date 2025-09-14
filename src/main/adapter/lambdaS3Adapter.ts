@@ -1,7 +1,13 @@
+import { Registry } from "@kernel/di/Registry";
 import { S3Handler } from "aws-lambda";
 import { IFileEventHandler } from "src/contracts/IFileEventHandler";
+import { Constructor } from "src/shared/types/constructor";
 
-export function lambdaS3Adapter(eventHandler: IFileEventHandler): S3Handler {
+export function lambdaS3Adapter(
+    eventHandlerImp: Constructor<IFileEventHandler>
+): S3Handler {
+    const eventHandler = Registry.getInstance().resolve(eventHandlerImp);
+
     return async (event) => {
         const responses = await Promise.allSettled(
             event.Records.map((record) =>

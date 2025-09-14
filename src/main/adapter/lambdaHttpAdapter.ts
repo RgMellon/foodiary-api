@@ -1,18 +1,24 @@
 import { ApplicationError } from "@application/errors/application/ApplicationError";
 import { HttpError } from "@application/errors/http/HttpError";
+import { Registry } from "@kernel/di/Registry";
 import { lambdaBodyParser } from "@main/utils/lambdaBodyParser";
 import {
     APIGatewayProxyEventV2,
     APIGatewayProxyEventV2WithJWTAuthorizer,
     APIGatewayProxyResultV2,
 } from "aws-lambda";
+import { Constructor } from "src/shared/types/constructor";
 import { ZodError } from "zod";
 import { Controller } from "../../contracts/Controller";
 import { lambdaErrorResponse } from "../utils/lambdaErrorResponse";
 
 type Event = APIGatewayProxyEventV2 | APIGatewayProxyEventV2WithJWTAuthorizer;
 
-export function lambdaHttpAdapter(controller: Controller<any, unknown>) {
+export function lambdaHttpAdapter(
+    controllerImp: Constructor<Controller<any, unknown>>
+) {
+    const controller = Registry.getInstance().resolve(controllerImp);
+
     return async (event: Event): Promise<APIGatewayProxyResultV2> => {
         try {
             const accountId =
